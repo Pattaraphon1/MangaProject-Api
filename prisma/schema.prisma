@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PUBLIC
+  USER
+}
+
+
+model User {
+  id       Int       @id @default(autoincrement())
+  username String
+  password String
+  email    String
+  role     Role
+
+  favorites Favorite[]
+  finishes  Finish[]
+}
+
+model Favorite {
+  id       Int     @id @default(autoincrement())
+  user     User    @relation(fields: [userId], references: [id])
+  userId   Int
+  anime    Anime?  @relation(fields: [animeId], references: [id])
+  animeId  Int?
+  manga    Manga?  @relation(fields: [mangaId], references: [id])
+  mangaId  Int?
+}
+
+model Finish {
+  id       Int     @id @default(autoincrement())
+  user     User    @relation(fields: [userId], references: [id])
+  userId   Int
+  anime    Anime?  @relation(fields: [animeId], references: [id])
+  animeId  Int?
+  manga    Manga?  @relation(fields: [mangaId], references: [id])
+  mangaId  Int?
+}
+
+model Anime {
+  id          Int       @id @default(autoincrement())
+  title       String
+  genre       String
+  author      String
+  description String
+  createAt    DateTime
+  updateAt    DateTime
+  image       String
+  genreRel    Genre     @relation(fields: [genreId], references: [id])
+  genreId     Int
+
+  favorites   Favorite[]
+  finishes    Finish[]
+}
+
+model Manga {
+  id          Int       @id @default(autoincrement())
+  title       String
+  genre       String
+  author      String
+  description String
+  createAt    DateTime
+  updateAt    DateTime
+  image       String
+  genreRel    Genre     @relation(fields: [genreId], references: [id])
+  genreId     Int
+
+  favorites   Favorite[]
+  finishes    Finish[]
+}
+
+model Genre {
+  id     Int     @id @default(autoincrement())
+  name   String
+
+  animes Anime[]
+  mangas Manga[]
+}
+
+model News {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  createAt  DateTime
+  updateAt  DateTime
+}
