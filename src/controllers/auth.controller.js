@@ -5,7 +5,11 @@ import jwt from 'jsonwebtoken';
 
 export async function register(req, res, next) {
   try{
-    const {email, username, password} = req.body
+    const {email, username, password, confirmPassword} = req.body
+
+    if (password !== confirmPassword) {
+      createError(400, 'Please check confirm password')
+    }
 
     const user = await prisma.user.findFirst({
       where: {
@@ -67,7 +71,6 @@ export async function login(req,res,next) {
       token: token,
     })
 
-    res.json({ message: "This is Login" });
 
     }catch(err){
       next(err)
