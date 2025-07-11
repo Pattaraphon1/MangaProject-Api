@@ -33,7 +33,7 @@ export async function register(req, res, next) {
         password: hashPassword,
       }
     })
-
+    console.log(user)
     res.json({ message: `Register ${result.username} Success` });
 
   }catch(err){

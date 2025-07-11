@@ -15,13 +15,13 @@ datasource db {
 }
 
 model User {
-  id              Int        @id @default(autoincrement())
-  username        String
-  password        String
-  email           String     @unique
-  role            Role       @default(USER)
-  favorites       Favorite[]
-  finishes        Finish[]
+  id       Int    @id @default(autoincrement())
+  username String
+  password String
+  email    String @unique
+  role     Role   @default(USER)
+  // favorites Favorite[]
+  // finishes  Finish[]
 }
 
 enum Role {
@@ -30,65 +30,68 @@ enum Role {
   USER
 }
 
-model Favorite {
-  id      Int    @id @default(autoincrement())
-  user    User   @relation(fields: [userId], references: [id])
-  userId  Int
-  anime   Anime? @relation(fields: [animeId], references: [id])
-  animeId Int?
-  manga   Manga? @relation(fields: [mangaId], references: [id])
-  mangaId Int?
-}
+// model Favorite {
+//   id      Int    @id @default(autoincrement())
+//   user    User   @relation(fields: [userId], references: [id])
+//   userId  Int
+//   anime   Anime? @relation(fields: [animeId], references: [id])
+//   animeId Int?
+//   manga   Manga? @relation(fields: [mangaId], references: [id])
+//   mangaId Int?
+// }
 
-model Finish {
-  id      Int    @id @default(autoincrement())
-  user    User   @relation(fields: [userId], references: [id])
-  userId  Int
-  anime   Anime? @relation(fields: [animeId], references: [id])
-  animeId Int?
-  manga   Manga? @relation(fields: [mangaId], references: [id])
-  mangaId Int?
-}
+// model Finish {
+//   id      Int    @id @default(autoincrement())
+//   user    User   @relation(fields: [userId], references: [id])
+//   userId  Int
+//   anime   Anime? @relation(fields: [animeId], references: [id])
+//   animeId Int?
+//   manga   Manga? @relation(fields: [mangaId], references: [id])
+//   mangaId Int?
+// }
 
 model Anime {
-  id          Int      @id @default(autoincrement())
-  title       String
-  genre       String
-  author      String
-  description String
-  createAt    DateTime
-  updateAt    DateTime
-  image       String
-  genreRel    Genre    @relation(fields: [genreId], references: [id])
-  genreId     Int
-
-  favorites Favorite[]
-  finishes  Finish[]
+  id       Int     @id @default(autoincrement())
+  malId    Int     @unique
+  title    String
+  imageUrl String
+  trailer  String?
+  score    Float?
+  status   String?
+  type     String?
+  synopsis String  @db.Text
+  @@fulltext([title])
+  // Favorite Favorite[]
+  // Finish   Finish[]
+  // Genre    Genre?     @relation(fields: [genreId], references: [id])
+  // genreId  Int?
 }
 
 model Manga {
-  id          Int      @id @default(autoincrement())
-  title       String
-  genre       String
-  author      String
-  description String
-  createAt    DateTime
-  updateAt    DateTime
-  image       String
-  genreRel    Genre    @relation(fields: [genreId], references: [id])
-  genreId     Int
+  id       Int     @id @default(autoincrement())
+  malId    Int     @unique
+  title    String
+  imageUrl String
+  volumes  Int?
+  score    Float?
+  status   String?
+  type     String?
+  synopsis String  @db.Text
+  @@fulltext([title])
+  //   genreRel Genre? @relation(fields: [genreId], references: [id])
+  //   genreId  Int?
 
-  favorites Favorite[]
-  finishes  Finish[]
+  //   favorites Favorite[]
+  //   finishes  Finish[]
 }
 
-model Genre {
-  id   Int    @id @default(autoincrement())
-  name String
+// model Genre {
+//   id   Int    @id @default(autoincrement())
+//   name String
 
-  animes Anime[]
-  mangas Manga[]
-}
+//   animes Anime[]
+//   mangas Manga[]
+// }
 
 model News {
   id       Int      @id @default(autoincrement())

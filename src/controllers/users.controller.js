@@ -1,4 +1,5 @@
 import prisma from "../config/prisma.config.js";
+import { createError } from "../utils/create.error.utils.js";
 
 
 export const getUser = async (req, res, next) => {
@@ -8,8 +9,8 @@ export const getUser = async (req, res, next) => {
         password:true
       }
     })
-    console.log(user)
 
+      
     res.json({
       message: "This is List All User",
       result: user
