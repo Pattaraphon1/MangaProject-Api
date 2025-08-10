@@ -3,10 +3,9 @@ import prisma from "../config/prisma.config.js";
 
 const baseUrl = "https://api.jikan.moe/v4";
 
-// controllers/anime.controller.js
 export const getAllAnime = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
-    const pageSize = 27; // ✅ แสดง 27 เรื่องต่อหน้า
+    const pageSize = 27; 
     const skip = (page - 1) * pageSize;
 
     try {
@@ -33,8 +32,6 @@ export const getAllAnime = async (req, res) => {
     }
 };
 
-
-
 export const getAnimeById = async (req, res) => {
     const { id } = req.params;
     try {
@@ -51,7 +48,6 @@ export const getAnimeById = async (req, res) => {
 export const searchAnime = async (req, res) => {
     const { q } = req.query;
 
-    // ถ้าไม่ส่ง q มาเลย return empty array
     if (!q || q.trim() === "") {
         return res.status(200).json([]);
     }
@@ -60,7 +56,7 @@ export const searchAnime = async (req, res) => {
         const anime = await prisma.anime.findMany({
             where: {
                 title: {
-                    search: q.trim(),
+                        contains: q.trim(),
                 },
             },
             orderBy: {
@@ -78,10 +74,9 @@ export const searchAnime = async (req, res) => {
 };
 
 
-// controllers/anime.controller.js
 export const fetchAndSaveTopAnime = async (req, res) => {
     const startPage = parseInt(req.query.startPage) || 1;
-    const maxPages = parseInt(req.query.limit) || 5; // จำนวนหน้าที่จะ fetch (เช่น 5 หน้า)
+    const maxPages = parseInt(req.query.limit) || 5; 
 
     let page = startPage;
     let endPage = startPage + maxPages - 1;
@@ -106,7 +101,6 @@ export const fetchAndSaveTopAnime = async (req, res) => {
             });
             const existingMalIds = existingAnimes.map(a => a.malId);
 
-            // ถ้าหน้านี้มีอยู่หมดแล้ว ข้าม
             const allExist = malIds.every(id => existingMalIds.includes(id));
             if (allExist) {
                 skippedPages.push(page);

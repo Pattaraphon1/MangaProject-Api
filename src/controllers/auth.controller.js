@@ -8,7 +8,7 @@ export async function register(req, res, next) {
     const {email, username, password, confirmPassword} = req.body
 
     if (password !== confirmPassword) {
-      createError(400, 'Please check confirm password')
+      throw createError(400, 'Please check confirm password')
     }
 
     const user = await prisma.user.findFirst({
@@ -20,7 +20,7 @@ export async function register(req, res, next) {
     console.log(user)
 
     if (user) {
-      createError(400, "Email already exist!!!")
+      throw createError(400, "Email already exist!!!")
     }
 
     const hashPassword = bcrypt.hashSync(password, 10);
@@ -62,7 +62,9 @@ export async function login(req,res,next) {
 
     const payload = {
       id: user.id,
-      role: user.role
+      role: user.role,
+      username: user.username,
+      email: user.email
     }
     const token = jwt.sign(payload, process.env.JWT_SECRET , {expiresIn: '1d',});
     res.json({

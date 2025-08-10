@@ -5,7 +5,7 @@ const baseUrl = "https://api.jikan.moe/v4";
 
 export const getAllManga = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const pageSize = 27; // ✅ แสดง 27 เรื่องต่อหน้า
+  const pageSize = 27; 
   const skip = (page - 1) * pageSize;
 
   try {
@@ -49,7 +49,6 @@ export const getMangaById = async (req, res) => {
 export const searchManga = async (req, res) => {
     const { q } = req.query;
 
-    // ถ้าไม่ส่ง q มาเลย return empty array
     if (!q || q.trim() === "") {
         return res.status(200).json([]);
     }
@@ -58,7 +57,7 @@ export const searchManga = async (req, res) => {
         const manga = await prisma.manga.findMany({
             where: {
                 title: {
-                    search: q.trim(),
+                        contains: q.trim(),
                 },
             },
             orderBy: {
